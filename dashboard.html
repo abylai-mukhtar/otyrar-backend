@@ -407,7 +407,20 @@
 <script src="../assets/js/cms-sync.js"></script>
 <script src="../assets/js/documents.js"></script>
 <script>
-checkAuth();
+
+function checkAuth() {
+
+  const token = localStorage.getItem('otyrar_token');
+
+  if (!token) {
+
+    window.location.href = 'index.html';
+
+  }
+
+}
+
+
 
 // ── INIT ──
 const saved_admin = JSON.parse(localStorage.getItem('otyrar_admin')||'{"user":"admin","pass":"otyrar2024"}');
@@ -876,7 +889,9 @@ function doChangePass() {
   if (nw !== conf) { showAlert('Парольдер сәйкес келмейді!','danger'); return; }
   if (nw.length < 6) { showAlert('Пароль кемінде 6 таңба!','danger'); return; }
   const token = localStorage.getItem('otyrar_token');
-  fetch('/api/admin/password', {
+  
+fetch('https://otyrar-backend.onrender.com/api/admin/password', {
+
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
