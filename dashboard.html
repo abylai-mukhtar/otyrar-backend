@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Әкімші Панелі — Отырар Музей</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--gold:#C9973A;--dark:#1A1208;--brown:#3D2B1F;--sand:#F5EDD8;--bg:#FDFAF4}
+    body{font-family:'Noto Sans',sans-serif;background:#f0ebe0;min-height:100vh;display:flex}
+    .sidebar{width:220px;background:var(--dark);color:#fff;flex-shrink:0;display:flex;flex-direction:column;min-height:100vh;position:sticky;top:0;height:100vh;overflow-y:auto}
+    .sidebar-logo{padding:24px 16px 20px;border-bottom:1px solid rgba(255,255,255,.1);text-align:center}
+    .sidebar-logo h2{font-family:'Playfair Display',serif;font-size:17px;color:var(--gold)}
+    .sidebar-logo p{font-size:10px;color:#aaa;margin-top:4px;letter-spacing:.5px}
+    .sidebar-nav{padding:12px 0;flex:1}
+    .nav-section{padding:8px 16px 4px;font-size:10px;color:#666;letter-spacing:1px;text-transform:uppercase;font-weight:600}
+    .sidebar-nav a{display:flex;align-items:center;gap:8px;padding:10px 16px;color:#ccc;text-decoration:none;font-size:13px;font-weight:600;transition:.2s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+    .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(201,151,58,.15);color:var(--gold)}
+    .sidebar-footer{padding:16px;border-top:1px solid rgba(255,255,255,.1)}
+    .sidebar-footer a{display:flex;align-items:center;gap:8px;color:#aaa;text-decoration:none;font-size:12px;transition:color .2s;margin-bottom:8px}
+    .sidebar-footer a:hover{color:var(--gold)}
+    .admin-main{flex:1;overflow-x:hidden;min-height:100vh}
+    .admin-topbar{background:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e0d8cc;position:sticky;top:0;z-index:100}
+    .admin-topbar h1{font-family:'Playfair Display',serif;font-size:18px;color:var(--dark);transition:opacity .3s}
+    .admin-content{padding:24px}
+    .alert{padding:12px 16px;border-radius:8px;margin-bottom:16px;font-weight:600;font-size:14px;animation:fadeIn .3s}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+    .alert-success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+    .alert-warning{background:#fff3cd;color:#856404;border:1px solid #ffeeba}
+    .alert-danger{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+    .section{display:none}.section.active{display:block}
+    .panel{background:#fff;border-radius:12px;padding:22px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:2px solid var(--sand)}
+    .panel-header h2{font-family:'Playfair Display',serif;font-size:17px;color:var(--dark)}
+    .btn{padding:9px 18px;border:none;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;transition:.2s;display:inline-flex;align-items:center;gap:6px}
+    .btn-primary{background:var(--gold);color:#fff}.btn-primary:hover{background:#b5832f}
+    .btn-secondary{background:#6c757d;color:#fff}.btn-secondary:hover{background:#5a6268}
+    .btn-danger{background:#dc3545;color:#fff}.btn-danger:hover{background:#c82333}
+    .btn-sm{padding:5px 10px;font-size:12px}
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+    .stat-card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.06);text-align:center}
+    .stat-num{font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);font-weight:700}
+    .stat-label{font-size:12px;color:#666;margin-top:4px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    table th{background:var(--sand);color:var(--brown);padding:10px 14px;text-align:left;font-weight:700;font-size:12px}
+    table td{padding:10px 14px;border-bottom:1px solid #f0ebe0;vertical-align:middle}
+    table tr:hover td{background:#faf6ee}
+    .badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;margin:1px}
+    .badge-kk{background:#2c3e50;color:#fff}.badge-ru{background:#c0392b;color:#fff}.badge-en{background:#27ae60;color:#fff}
+    .hidden{display:none!important}
+    .form-section{background:#fff;border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,.08);border-top:4px solid var(--gold)}
+    .form-section h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);margin-bottom:18px}
+    .tabs{display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid var(--sand)}
+    .tab-btn{padding:9px 18px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#999;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s}
+    .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+    .tab-content{display:none}.tab-content.active{display:block}
+    .form-group{margin-bottom:14px}
+    .form-group label{display:block;font-weight:600;color:var(--brown);margin-bottom:5px;font-size:13px}
+    .form-group input,.form-group textarea,.form-group select{width:100%;padding:9px 12px;border:2px solid #e0d8cc;border-radius:8px;font-size:13px;font-family:inherit;transition:border-color .2s;resize:vertical}
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--gold)}
+    .form-group textarea{min-height:100px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+    .form-actions{display:flex;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--sand)}
+    .img-preview{max-width:200px;max-height:150px;border-radius:8px;margin-top:8px;object-fit:cover;border:2px solid var(--sand)}
+    .gallery-thumb-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
+    .gallery-thumb{position:relative;cursor:pointer}
+    .gallery-thumb img{width:100%;height:80px;object-fit:cover;border-radius:6px;border:2px solid transparent;transition:.2s}
+    .gallery-thumb img.selected{border-color:var(--gold)}
+    .gallery-thumb .del-btn{position:absolute;top:2px;right:2px;background:rgba(220,53,69,.85);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center}
+    .gallery-thumb:hover .del-btn{display:flex}
+    .info-box{background:var(--sand);border-radius:10px;padding:16px;margin-bottom:16px;font-size:13px;color:var(--brown)}
+    .info-box strong{display:block;margin-bottom:4px}
+    @media(max-width:900px){.stats-row{grid-template-columns:repeat(2,1fr)}.sidebar{width:180px}}
+    @media(max-width:640px){.sidebar{display:none}.admin-content{padding:12px}.stats-row{grid-template-columns:1fr 1fr}.form-row,.form-row-3{grid-template-columns:1fr}.gallery-thumb-grid{grid-template-columns:repeat(4,1fr)}}
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div style="font-size:28px;margin-bottom:6px">🏛️</div>
+    <h2>Отырар<br>Музей</h2>
+    <p>ӘКІМШІ ПАНЕЛІ</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Негізгі</div>
+    <a onclick="showSection('dashboard',this)">📊 Дашборд</a>
+    
+    <div class="nav-section">Контент</div>
+    <a onclick="showSection('news',this)" class="active">📰 Жаңалықтар</a>
+    <a onclick="showSection('gallery',this)">🖼️ Галерея</a>
+    <a onclick="showSection('heritage',this)">🏺 Тарихи мұралар</a>
+    <a onclick="showSection('science',this)">📚 Ғылыми еңбектер</a>
+    <a onclick="showSection('director',this)">👤 Директор</a>
+    <a onclick="showSection('contact',this)">📍 Байланыс</a>
+    <a onclick="showSection('documents',this)">📄 Құжаттар</a>
+    
+    <div class="nav-section">Жүйе</div>
+    <a onclick="showSection('password',this)">🔑 Пароль</a>
+    <a onclick="showSection('help',this)">❓ Анықтама</a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="../kk/index.html" target="_blank">🌐 Сайтты ашу</a>
+    <a onclick="adminLogout()" style="color:#e74c3c">🚪 Шығу</a>
+  </div>
+</aside>
+
+<div class="admin-main">
+  <div class="admin-topbar">
+    <h1 id="page-title">Жаңалықтар</h1>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:13px;color:#999" id="username-display">admin</span>
+      <div style="background:var(--gold);color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">A</div>
+    </div>
+  </div>
+  <div class="admin-content">
+
+    <!-- ═══════════ DASHBOARD ═══════════ -->
+    <div id="section-dashboard" class="section">
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num" id="stat-news">0</div><div class="stat-label">Жаңалықтар</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-gallery">0</div><div class="stat-label">Галерея сурет</div></div>
+        <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">Тіл</div></div>
+        <div class="stat-card"><div class="stat-num">✓</div><div class="stat-label">Жүйе дайын</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>🚀 Жылдам іс-әрекеттер</h2></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <button class="btn btn-primary" onclick="showSection('news',document.querySelector('.sidebar-nav a:nth-child(4)'))">📰 Жаңалық қосу</button>
+          <button class="btn btn-primary" onclick="showSection('gallery',document.querySelector('.sidebar-nav a:nth-child(5)'))">🖼️ Сурет қосу</button>
+          <button class="btn btn-primary" onclick="showSection('heritage',document.querySelector('.sidebar-nav a:nth-child(6)'))">🏺 Мұраны өзгерту</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>ℹ️ Музей ақпараты</h2></div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;font-size:13px;color:var(--brown)">
+          <div>📞 +7 725 44 21 150</div>
+          <div>✉ Otrar_muzey@mail.ru</div>
+          <div>🕐 Дс-Жс: 09:00–18:00</div>
+          <div>📍 Шәуілдір ауылы, Жібек жолы №1</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ NEWS ═══════════ -->
+    <div id="section-news" class="section active">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>📰 Жаңалықтар тізімі</h2>
+          <button class="btn btn-primary" onclick="openNewsForm(-1)">+ Жаңалық қосу</button>
+        </div>
+        <table>
+          <thead><tr><th>#</th><th>Күні</th><th>Тақырып (ҚАЗ)</th><th>Тілдер</th><th>Әрекет</th></tr></thead>
+          <tbody id="news-tbody"><tr><td colspan="5" style="text-align:center;color:#999;padding:20px">Жаңалық жоқ</td></tr></tbody>
+        </table>
+      </div>
+      <div id="news-form" class="form-section hidden">
+        <h3 id="news-form-title">Жаңа жаңалық қосу</h3>
+        <input type="hidden" id="news-idx" value="-1">
+        <div class="form-row">
+          <div class="form-group"><label>📅 Күні</label><input type="date" id="n-date"></div>
+          <div class="form-group">
+            <label>🖼️ Сурет (жолдан таңдаңыз немесе URL)</label>
+            <select id="n-img-select" onchange="previewNewsImg()">
+              <option value="">— Суретті таңдаңыз —</option>
+            </select>
+            <input type="text" id="n-img" placeholder="немесе суреттің URL-і" style="margin-top:6px" oninput="previewNewsImgUrl()">
+            <img id="n-img-preview" style="max-width:200px;max-height:120px;border-radius:8px;margin-top:8px;object-fit:cover;display:none">
+          </div>
+        </div>
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchLangTab(this,'n','kk')">🇰🇿 Қазақша</button>
+          <button class="tab-btn" onclick="switchLangTab(this,'n','ru')">🇷🇺 Орысша</button>
+          <button class="tab-btn" onclick="switchLangTab(this,'n','en')">🇬🇧 Ағылшынша</button>
+        </div>
+        <div id="n-tab-kk" class="tab-content active">
+          <div class="form-group"><label>Тақырып (ҚАЗ) *</label><input type="text" id="n-title-kk" placeholder="Жаңалық тақырыбы"></div>
+          <div class="form-group"><label>Мәтін (ҚАЗ) *</label><textarea id="n-body-kk" placeholder="Жаңалық мәтіні..."></textarea></div>
+        </div>
+        <div id="n-tab-ru" class="tab-content">
+          <div class="form-group"><label>Заголовок (РУС)</label><input type="text" id="n-title-ru" placeholder="Заголовок новости"></div>
+          <div class="form-group"><label>Текст (РУС)</label><textarea id="n-body-ru" placeholder="Текст новости..."></textarea></div>
+        </div>
+        <div id="n-tab-en" class="tab-content">
+          <div class="form-group"><label>Title (ENG)</label><input type="text" id="n-title-en" placeholder="News title"></div>
+          <div class="form-group"><label>Body (ENG)</label><textarea id="n-body-en" placeholder="News content..."></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="saveNews()">💾 Сақтау</button>
+          <button class="btn btn-secondary" onclick="closeNewsForm()">✕ Болдырмау</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ GALLERY ═══════════ -->
+    <div id="section-gallery" class="section">
+      <div class="panel">
+        <div class="panel-header"><h2>🖼️ Фото Галерея</h2><button class="btn btn-primary" onclick="openGalleryAdd()">+ Сурет қосу</button></div>
+        <div class="info-box"><strong>💡 Ақпарат</strong>Галереядағы суреттер сайттың Медиа бетінде көрсетіледі. Суретке URL немесе жергілікті файл жолын пайдаланыңыз.</div>
+        <div id="gallery-grid" class="gallery-thumb-grid"></div>
+      </div>
+      <div id="gallery-form" class="form-section hidden">
+        <h3>Галерея суретін қосу</h3>
+        <div class="form-group">
+          <label>Сурет таңдаңыз (музей суреттерінен)</label>
+          <select id="gal-select" onchange="previewGalImg()" style="margin-bottom:8px">
+            <option value="">— Таңдаңыз —</option>
+          </select>
+          <input type="text" id="gal-url" placeholder="немесе өз URL-іңіз">
+          <img id="gal-preview" style="max-width:200px;max-height:150px;border-radius:8px;margin-top:8px;object-fit:cover;display:none">
+        </div>
+        <div class="form-group"><label>Жазба (қосымша)</label><input type="text" id="gal-caption" placeholder="Сурет жазбасы"></div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="saveGallery()">💾 Сақтау</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('gallery-form').classList.add('hidden')">✕ Болдырмау</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ HERITAGE ═══════════ -->
+    <div id="section-heritage" class="section">
+      <div class="panel">
+        <div class="panel-header"><h2>🏺 Тарихи-Мәдени Мұралар</h2></div>
+        <div class="info-box"><strong>💡 Ақпарат</strong>Мынадай ескерткіштер бар: Отырар қалажұрты, Арыстанбаб кесенесі, Ежелгі Отырар қаласы, Оқсыз қалажұрты. Мәтін мен суреттерді өзгертуге болады.</div>
+      </div>
+      <div id="heritage-list"></div>
+    </div>
+
+    <!-- ═══════════ SCIENCE ═══════════ -->
+    <div id="section-science" class="section">
+      <div class="panel">
+        <div class="panel-header"><h2>📚 Ғылыми Еңбектер</h2><button class="btn btn-primary" onclick="openSciForm(-1)">+ Қосу</button></div>
+        <div id="sci-list"></div>
+      </div>
+      <div id="sci-form" class="form-section hidden">
+        <h3 id="sci-form-title">Ғылыми еңбек қосу</h3>
+        <input type="hidden" id="sci-idx" value="-1">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchLangTab(this,'sci','kk')">🇰🇿 Қазақша</button>
+          <button class="tab-btn" onclick="switchLangTab(this,'sci','ru')">🇷🇺 Орысша</button>
+          <button class="tab-btn" onclick="switchLangTab(this,'sci','en')">🇬🇧 Ағылшынша</button>
+        </div>
+        <div id="sci-tab-kk" class="tab-content active">
+          <div class="form-group"><label>Атауы (ҚАЗ) *</label><input type="text" id="sci-title-kk" placeholder="Ғылыми еңбектің атауы"></div>
+          <div class="form-group"><label>Сипаттамасы (ҚАЗ)</label><textarea id="sci-desc-kk" rows="3" placeholder="Қысқаша сипаттама"></textarea></div>
+        </div>
+        <div id="sci-tab-ru" class="tab-content">
+          <div class="form-group"><label>Название (РУС)</label><input type="text" id="sci-title-ru"></div>
+          <div class="form-group"><label>Описание (РУС)</label><textarea id="sci-desc-ru" rows="3"></textarea></div>
+        </div>
+        <div id="sci-tab-en" class="tab-content">
+          <div class="form-group"><label>Title (ENG)</label><input type="text" id="sci-title-en"></div>
+          <div class="form-group"><label>Description (ENG)</label><textarea id="sci-desc-en" rows="3"></textarea></div>
+        </div>
+        <div class="form-group"><label>📅 Жыл</label><input type="text" id="sci-year" placeholder="2024" style="max-width:120px"></div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="saveSci()">💾 Сақтау</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('sci-form').classList.add('hidden')">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ DIRECTOR ═══════════ -->
+    <div id="section-director" class="section">
+      <div class="panel">
+        <div class="panel-header"><h2>👤 Директор ақпараты</h2><button class="btn btn-primary" onclick="saveDirector()">💾 Сақтау</button></div>
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="form-group"><label>Аты-жөні (ҚАЗ)</label><input type="text" id="dir-name-kk" placeholder="Аты-жөні"></div>
+          <div class="form-group"><label>Лауазымы (ҚАЗ)</label><input type="text" id="dir-pos-kk" placeholder="Директор лауазымы"></div>
+        </div>
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="form-group"><label>Имя (РУС)</label><input type="text" id="dir-name-ru"></div>
+          <div class="form-group"><label>Должность (РУС)</label><input type="text" id="dir-pos-ru"></div>
+        </div>
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="form-group"><label>Name (ENG)</label><input type="text" id="dir-name-en"></div>
+          <div class="form-group"><label>Position (ENG)</label><input type="text" id="dir-pos-en"></div>
+        </div>
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchLangTab(this,'bio','kk')">🇰🇿 ҚАЗ Өмірбаян</button>
+          <button class="tab-btn" onclick="switchLangTab(this,'bio','ru')">🇷🇺 РУС Биография</button>
+          <button class="tab-btn" onclick="switchLangTab(this,'bio','en')">🇬🇧 ENG Biography</button>
+        </div>
+        <div id="bio-tab-kk" class="tab-content active">
+          <div class="form-group"><label>Өмірбаян (ҚАЗ)</label><textarea id="dir-bio-kk" rows="5"></textarea></div>
+        </div>
+        <div id="bio-tab-ru" class="tab-content">
+          <div class="form-group"><label>Биография (РУС)</label><textarea id="dir-bio-ru" rows="5"></textarea></div>
+        </div>
+        <div id="bio-tab-en" class="tab-content">
+          <div class="form-group"><label>Biography (ENG)</label><textarea id="dir-bio-en" rows="5"></textarea></div>
+        </div>
+        <div class="form-group" style="margin-top:12px">
+          <label>🖼️ Директор суреті</label>
+          <select id="dir-img-select" onchange="previewDirImg()" style="margin-bottom:6px">
+            <option value="">— Таңдаңыз —</option>
+          </select>
+          <img id="dir-img-preview" style="max-width:150px;max-height:180px;border-radius:8px;object-fit:cover;display:none;margin-top:6px">
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>❓ Сұрақ-Жауап</h2><button class="btn btn-primary" onclick="openQAForm(-1)">+ Қосу</button></div>
+        <div id="qa-list"></div>
+        <div id="qa-form" class="form-section hidden" style="margin-top:16px">
+          <h3 id="qa-form-title">Сұрақ-жауап қосу</h3>
+          <input type="hidden" id="qa-idx" value="-1">
+          <div class="tabs">
+            <button class="tab-btn active" onclick="switchLangTab(this,'qa','kk')">🇰🇿 ҚАЗ</button>
+            <button class="tab-btn" onclick="switchLangTab(this,'qa','ru')">🇷🇺 РУС</button>
+            <button class="tab-btn" onclick="switchLangTab(this,'qa','en')">🇬🇧 ENG</button>
+          </div>
+          <div id="qa-tab-kk" class="tab-content active">
+            <div class="form-group"><label>Сұрақ (ҚАЗ)</label><input type="text" id="qa-q-kk"></div>
+            <div class="form-group"><label>Жауап (ҚАЗ)</label><textarea id="qa-a-kk" rows="3"></textarea></div>
+          </div>
+          <div id="qa-tab-ru" class="tab-content">
+            <div class="form-group"><label>Вопрос (РУС)</label><input type="text" id="qa-q-ru"></div>
+            <div class="form-group"><label>Ответ (РУС)</label><textarea id="qa-a-ru" rows="3"></textarea></div>
+          </div>
+          <div id="qa-tab-en" class="tab-content">
+            <div class="form-group"><label>Question (ENG)</label><input type="text" id="qa-q-en"></div>
+            <div class="form-group"><label>Answer (ENG)</label><textarea id="qa-a-en" rows="3"></textarea></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveQA()">💾 Сақтау</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('qa-form').classList.add('hidden')">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ CONTACT ═══════════ -->
+    <div id="section-contact" class="section">
+      <div class="panel">
+        <div class="panel-header"><h2>📍 Байланыс деректемелері</h2><button class="btn btn-primary" onclick="saveContact()">💾 Сақтау</button></div>
+        <div class="form-row">
+          <div class="form-group"><label>📞 Телефон</label><input type="text" id="ct-phone" placeholder="+7 725 44 21 150"></div>
+          <div class="form-group"><label>✉ Email</label><input type="email" id="ct-email" placeholder="Otrar_muzey@mail.ru"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>🕐 Жұмыс уақыты (ҚАЗ)</label><input type="text" id="ct-hours-kk" placeholder="Дс-Жс: 09:00–18:00"></div>
+          <div class="form-group"><label>🕐 Жұмыс уақыты (РУС)</label><input type="text" id="ct-hours-ru" placeholder="Пн-Вс: 09:00–18:00"></div>
+        </div>
+        <div class="form-group"><label>📍 Мекенжай (ҚАЗ)</label><input type="text" id="ct-addr-kk"></div>
+        <div class="form-group"><label>📍 Адрес (РУС)</label><input type="text" id="ct-addr-ru"></div>
+        <div class="form-group"><label>📍 Address (ENG)</label><input type="text" id="ct-addr-en"></div>
+        <div class="form-row">
+          <div class="form-group"><label>🎫 Билет сілтемесі</label><input type="text" id="ct-ticket" placeholder="https://m.ticketon.kz/..."></div>
+          <div class="form-group"><label>🌐 Google Maps URL</label><input type="text" id="ct-maps" placeholder="https://maps.google.com/..."></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ DOCUMENTS ═══════════ -->
+    <div id="section-documents" class="section">
+      <div class="panel">
+        <div class="panel-header"><h2>📄 Құжаттар (CMS)</h2><button class="btn btn-primary" onclick="saveDocumentsEditor()">💾 Сақтау</button></div>
+        <div class="info-box">
+          <strong>Формат</strong>
+          JSON массив қолданыңыз. Әр элементте: <code>file</code>, <code>category</code> (law/rule/plan/doc), <code>pages</code>, <code>size_kb</code>, <code>name_kk</code>, <code>name_ru</code>, <code>name_en</code>.
+        </div>
+        <div class="form-group">
+          <label>Құжаттар JSON</label>
+          <textarea id="docs-json" rows="18" style="font-family:Consolas,monospace"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ PASSWORD ═══════════ -->
+    <div id="section-password" class="section">
+      <div class="panel" style="max-width:480px">
+        <div class="panel-header"><h2>🔑 Пароль өзгерту</h2></div>
+        <div class="form-group"><label>Ескі пароль</label><input type="password" id="old-pass"></div>
+        <div class="form-group"><label>Жаңа пароль (кемінде 6 таңба)</label><input type="password" id="new-pass"></div>
+        <div class="form-group"><label>Жаңа парольді растау</label><input type="password" id="confirm-pass"></div>
+        <button class="btn btn-primary" onclick="doChangePass()">Парольді өзгерту</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ HELP ═══════════ -->
+    <div id="section-help" class="section">
+      <div class="panel">
+        <div class="panel-header"><h2>❓ Пайдалану нұсқаулығы</h2></div>
+        <div style="line-height:1.9;color:var(--brown);font-size:14px">
+          <h3 style="color:var(--dark);margin-bottom:10px">📰 Жаңалық қосу</h3>
+          <ol style="padding-left:20px;margin-bottom:20px">
+            <li>«Жаңалықтар» бөліміне кіріңіз</li>
+            <li>«+ Жаңалық қосу» батырмасын басыңыз</li>
+            <li>Күні, сурет таңдаңыз</li>
+            <li>Үш тілде тақырып пен мәтін жазыңыз</li>
+            <li>«Сақтау» батырмасын басыңыз — жаңалық сайтта пайда болады</li>
+          </ol>
+          <h3 style="color:var(--dark);margin-bottom:10px">🖼️ Галерея</h3>
+          <p style="margin-bottom:16px">«Галерея» бөлімінде мұрағаттан жүктелген суреттерді таңдап, галереяға қоса аласыз.</p>
+          <h3 style="color:var(--dark);margin-bottom:10px">🔑 Кіру деректері</h3>
+          <p>Логин: <strong>admin</strong> | Бастапқы пароль: <strong>otyrar2024</strong></p>
+          <p style="margin-top:8px;color:#888;font-size:13px">⚠️ Деректер браузер жадында сақталады. Басқа браузерде ашсаңыз деректер болмайды.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /admin-content -->
+</div><!-- /admin-main -->
+
+<script src="../assets/js/main.js"></script>
+<script src="../assets/js/cms-sync.js"></script>
+<script src="../assets/js/documents.js"></script>
+<script>
+checkAuth();
+
+// ── INIT ──
+const saved_admin = JSON.parse(localStorage.getItem('otyrar_admin')||'{"user":"admin","pass":"otyrar2024"}');
+document.getElementById('username-display').textContent = saved_admin.user;
+
+// Local museum images list
+const LOCAL_IMGS = [
+  "01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","9.jpg","12.jpg","51.jpg","987.jpg",
+  "img_bg_4.JPG","member1.jpg","member2.JPG","member4.jpg","2018-03-01-16-01-40-386.jpg",
+  "WhatsAppImage2023-06-01at12.52.23.jpeg","WhatsAppImage2023-06-29at07.10.33.jpeg",
+  "WhatsAppImage2023-06-29at07.35.331.jpeg","WhatsAppImage2023-06-29at07.35.341.jpeg",
+  "WhatsAppImage2024-04-19at11.16.50.jpeg","WhatsAppImage2024-04-19at11.16.501.jpeg",
+  "WhatsAppImage2024-04-19at11.20.03.jpeg","WhatsAppImage2023-05-22at22.23.26.jpeg",
+  "WhatsAppImage2023-04-03at08.29.58.jpeg","436236934_844662781028002_4682618964323015977_n.jpg",
+  "453653745_891281669699446_5344562801923418561_n.jpg","453747501_891282133032733_1693581842374781927_n.jpg",
+  "461925432_936200718540874_8215959318546286465_n.jpg","462194232_936201165207496_8640764988649973539_n.jpg",
+  "DSC03641.jpg","DSC04249.JPG","DSC_05661.JPG","28514402_560679767650434_1872011807153103902_o.jpg",
+  "Logo4.jpg","oksus_2.jpg","photo1710754483.jpeg"
+];
+
+function imgPath(fname){ return '../images/' + fname; }
+
+// Populate selects
+function populateImgSelect(selectId) {
+  const sel = document.getElementById(selectId);
+  if (!sel) return;
+  LOCAL_IMGS.forEach(img => {
+    const opt = document.createElement('option');
+    opt.value = img;
+    opt.textContent = img;
+    sel.appendChild(opt);
+  });
+}
+populateImgSelect('n-img-select');
+populateImgSelect('gal-select');
+populateImgSelect('dir-img-select');
+
+// ── SECTION SWITCH ──
+function showSection(name, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const titles = {dashboard:'Дашборд',news:'Жаңалықтар',gallery:'Галерея',heritage:'Тарихи Мұралар',science:'Ғылыми Еңбектер',director:'Директор',contact:'Байланыс',documents:'Құжаттар',password:'Пароль',help:'Анықтама'};
+  document.getElementById('page-title').textContent = titles[name]||name;
+  if (name==='news') renderNewsTable();
+  if (name==='gallery') renderGalleryGrid();
+  if (name==='heritage') renderHeritage();
+  if (name==='science') renderSci();
+  if (name==='director') loadDirector();
+  if (name==='contact') loadContact();
+  if (name==='documents') loadDocumentsEditor();
+  if (name==='dashboard') updateDashboard();
+  return false;
+}
+
+function showAlert(msg, type='success') {
+  const div = document.createElement('div');
+  div.className = `alert alert-${type}`;
+  div.textContent = msg;
+  document.querySelector('.admin-content').prepend(div);
+  setTimeout(() => div.remove(), 4000);
+}
+
+function updateDashboard() {
+  document.getElementById('stat-news').textContent = (JSON.parse(localStorage.getItem('otyrar_news')||'[]')).length;
+  document.getElementById('stat-gallery').textContent = (JSON.parse(localStorage.getItem('otyrar_gallery')||'[]')).length;
+}
+
+// ── TAB SWITCH ──
+function switchLangTab(btn, prefix, lang) {
+  document.querySelectorAll(`[id^="${prefix}-tab-"]`).forEach(t => t.classList.remove('active'));
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`${prefix}-tab-${lang}`)?.classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── NEWS ──
+function renderNewsTable() {
+  const news = getNews();
+  const tbody = document.getElementById('news-tbody');
+  if (!news.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:20px">Жаңалық жоқ</td></tr>'; return; }
+  tbody.innerHTML = news.map((n,i) => `<tr>
+    <td>${i+1}</td>
+    <td>${n.date||'—'}</td>
+    <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${n.title_kk||'—'}</td>
+    <td>
+      ${n.title_kk?'<span class="badge badge-kk">ҚАЗ</span>':''}
+      ${n.title_ru?'<span class="badge badge-ru">РУС</span>':''}
+      ${n.title_en?'<span class="badge badge-en">ENG</span>':''}
+    </td>
+    <td>
+      <button class="btn btn-sm" style="background:var(--gold);color:#fff" onclick="openNewsForm(${i})">✏️</button>
+      <button class="btn btn-sm btn-danger" onclick="delNews(${i})" style="margin-left:4px">🗑️</button>
+    </td>
+  </tr>`).join('');
+}
+
+function openNewsForm(idx) {
+  const form = document.getElementById('news-form');
+  form.classList.remove('hidden');
+  document.getElementById('news-idx').value = idx;
+  document.getElementById('news-form-title').textContent = idx===-1 ? 'Жаңа жаңалық қосу' : 'Жаңалықты өңдеу';
+  if (idx === -1) {
+    ['kk','ru','en'].forEach(l => { document.getElementById(`n-title-${l}`).value=''; document.getElementById(`n-body-${l}`).value=''; });
+    document.getElementById('n-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('n-img').value='';
+    document.getElementById('n-img-select').value='';
+    document.getElementById('n-img-preview').style.display='none';
+  } else {
+    const n = getNews()[idx];
+    ['kk','ru','en'].forEach(l => { document.getElementById(`n-title-${l}`).value=n[`title_${l}`]||''; document.getElementById(`n-body-${l}`).value=n[`body_${l}`]||''; });
+    document.getElementById('n-date').value = n.date||'';
+    document.getElementById('n-img').value = n.img||'';
+    document.getElementById('n-img-preview').src = n.img ? (n.img.startsWith('http')?n.img:imgPath(n.img)) : '';
+    document.getElementById('n-img-preview').style.display = n.img?'block':'none';
+  }
+  form.scrollIntoView({behavior:'smooth'});
+}
+
+function previewNewsImg() {
+  const val = document.getElementById('n-img-select').value;
+  if (val) {
+    document.getElementById('n-img').value = val;
+    const preview = document.getElementById('n-img-preview');
+    preview.src = imgPath(val);
+    preview.style.display = 'block';
+  }
+}
+function previewNewsImgUrl() {
+  const val = document.getElementById('n-img').value;
+  const preview = document.getElementById('n-img-preview');
+  if (val) { preview.src = val.startsWith('http') ? val : imgPath(val); preview.style.display='block'; }
+  else preview.style.display='none';
+}
+
+function closeNewsForm() { document.getElementById('news-form').classList.add('hidden'); }
+
+function saveNews() {
+  const idx = parseInt(document.getElementById('news-idx').value);
+  const kk = document.getElementById('n-title-kk').value.trim();
+  if (!kk) { showAlert('Қазақша тақырып міндетті!','danger'); return; }
+  const obj = {
+    date: document.getElementById('n-date').value,
+    img: document.getElementById('n-img').value || document.getElementById('n-img-select').value,
+    title_kk: kk, body_kk: document.getElementById('n-body-kk').value,
+    title_ru: document.getElementById('n-title-ru').value, body_ru: document.getElementById('n-body-ru').value,
+    title_en: document.getElementById('n-title-en').value, body_en: document.getElementById('n-body-en').value,
+  };
+  const news = getNews();
+  if (idx===-1) news.unshift(obj); else news[idx]=obj;
+  saveNewsData(news);
+  closeNewsForm();
+  renderNewsTable();
+  showAlert('Жаңалық сәтті сақталды! ✅');
+}
+function delNews(idx) {
+  if (!confirm('Жаңалықты жоясыз ба?')) return;
+  const news = getNews(); news.splice(idx,1); saveNewsData(news);
+  renderNewsTable(); showAlert('Жаңалық жойылды.','warning');
+}
+function saveNewsData(arr) { localStorage.setItem('otyrar_news', JSON.stringify(arr)); }
+
+// Override renderPublicNews img path
+const origRenderPublic = window.renderPublicNews;
+window.renderPublicNews = function(lang) {
+  const container = document.getElementById('public-news-grid');
+  if (!container) return;
+  const news = getNews();
+  if (!news.length) { container.innerHTML = ''; return; }
+  container.innerHTML = news.slice(0,6).map(n => {
+    const title = n[`title_${lang}`]||n.title_kk||'—';
+    const body = n[`body_${lang}`]||n.body_kk||'';
+    let img = n.img || '01.jpg';
+    if (!img.startsWith('http') && !img.startsWith('../')) img = '../images/' + img;
+    return `<div class="news-card"><div class="news-card-img"><img src="${img}" alt="${title}" loading="lazy"></div><div class="news-card-body"><div class="news-date">📅 ${n.date}</div><h3>${title}</h3><p>${body.substring(0,120)}…</p></div></div>`;
+  }).join('');
+};
+
+// ── GALLERY ──
+function getGallery() { return JSON.parse(localStorage.getItem('otyrar_gallery')||'[]'); }
+function saveGalleryData(arr) { localStorage.setItem('otyrar_gallery', JSON.stringify(arr)); }
+
+function renderGalleryGrid() {
+  const gallery = getGallery();
+  const grid = document.getElementById('gallery-grid');
+  if (!gallery.length) { grid.innerHTML = '<p style="color:#999;font-size:13px">Галерея бос</p>'; return; }
+  grid.innerHTML = gallery.map((item,i) => {
+    let src = item.img;
+    if (!src.startsWith('http') && !src.startsWith('../')) src = '../images/' + src;
+    return `<div class="gallery-thumb">
+      <img src="${src}" loading="lazy" title="${item.caption||''}">
+      <button class="del-btn" onclick="delGallery(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function openGalleryAdd() {
+  document.getElementById('gallery-form').classList.remove('hidden');
+  document.getElementById('gal-select').value='';
+  document.getElementById('gal-url').value='';
+  document.getElementById('gal-caption').value='';
+  document.getElementById('gal-preview').style.display='none';
+}
+function previewGalImg() {
+  const val = document.getElementById('gal-select').value;
+  if (val) { const p=document.getElementById('gal-preview'); p.src=imgPath(val); p.style.display='block'; }
+}
+function saveGallery() {
+  const img = document.getElementById('gal-url').value || document.getElementById('gal-select').value;
+  if (!img) { showAlert('Сурет таңдаңыз!','danger'); return; }
+  const gallery = getGallery();
+  gallery.push({img, caption: document.getElementById('gal-caption').value});
+  saveGalleryData(gallery);
+  document.getElementById('gallery-form').classList.add('hidden');
+  renderGalleryGrid();
+  showAlert('Сурет қосылды! ✅');
+}
+function delGallery(idx) {
+  if (!confirm('Суретті жоясыз ба?')) return;
+  const g = getGallery(); g.splice(idx,1); saveGalleryData(g);
+  renderGalleryGrid(); showAlert('Сурет жойылды.','warning');
+}
+
+// ── HERITAGE ──
+const HERITAGE_DEFAULT = [
+  {id:'otrar',img:'2018-03-01-16-01-40-386.jpg',
+   title_kk:'Отырар Қалажұрты',title_ru:'Городище Отрар',title_en:'Otrar Settlement',
+   text_kk:'Отырар — Ұлы Жібек жолының маңызды торабы болған ортағасырлық қала орны. Қала б.з.д. I ғасырда пайда болып, орта ғасырларда гүлденген. Монғол шапқыншылығы кезінде 1219 жылы бес ай бойы қоршауда қалған.',
+   text_ru:'Отрар — городище средневекового города, являвшегося важным узлом Великого Шёлкового пути. В 1219 году, во время монгольского нашествия, Отрар пять месяцев героически держал осаду.',
+   text_en:'Otrar is the site of a medieval city that served as an important node on the Great Silk Road. During the Mongol invasion of 1219, Otrar heroically withstood a five-month siege.'},
+  {id:'arystanbab',img:'WhatsAppImage2023-06-01at12.52.23.jpeg',
+   title_kk:'Арыстанбаб Кесенесі',title_ru:'Мавзолей Арыстанбаб',title_en:'Arystanbab Mausoleum',
+   text_kk:'Арыстанбаб кесенесі — Оңтүстік Қазақстандағы ең маңызды діни орындардың бірі. XII–XIV ғасырларда салынған. Жыл сайын мыңдаған зиярат қылушылар мен туристер келеді.',
+   text_ru:'Мавзолей Арыстанбаб — одно из важнейших религиозных мест в Южном Казахстане. Построен в XII–XIV веках. Ежегодно тысячи паломников и туристов посещают мавзолей.',
+   text_en:'The Arystanbab Mausoleum is one of the most important religious sites in southern Kazakhstan, built in the 12th–14th centuries. Thousands of pilgrims and tourists visit every year.'},
+  {id:'ancient',img:'51.jpg',
+   title_kk:'Ежелгі Отырар Қаласы',title_ru:'Древний Город Отрар',title_en:'Ancient City of Otrar',
+   text_kk:'Ежелгі Отырар қаласының мәдени қабаттары б.з.д. I ғасырдан бастап XIX ғасырға дейінгі тарихты қамтиды. Жібек жолының маңызды сауда орталығы болды.',
+   text_ru:'Культурные слои Древнего Отрара охватывают историю с I века до н.э. до XIX века. Был одним из важных торговых центров Шёлкового пути.',
+   text_en:'The cultural layers of Ancient Otrar span history from the 1st century BC to the 19th century. It was an important trading centre along the Silk Road.'},
+  {id:'oksyz',img:'oksus_2.jpg',
+   title_kk:'Оқсыз Қалажұрты',title_ru:'Городище Оксыз',title_en:'Oksyz Settlement',
+   text_kk:'Оқсыз — орта ғасырдағы ауыл орны, Отырар оазисінің ортасында орналасқан. VI–XII ғасырлардағы қала мәдениетін зерттеуге мүмкіндік берді.',
+   text_ru:'Оксыз — средневековое поселение в центре Отрарского оазиса. Позволило изучить городскую культуру VI–XII веков.',
+   text_en:'Oksyz is a medieval settlement located in the heart of the Otrar oasis, allowing study of urban culture from the 6th to 12th centuries.'},
+];
+
+function getHeritage() { return JSON.parse(localStorage.getItem('otyrar_heritage')||JSON.stringify(HERITAGE_DEFAULT)); }
+function saveHeritageData(arr) { localStorage.setItem('otyrar_heritage', JSON.stringify(arr)); }
+
+function renderHeritage() {
+  const items = getHeritage();
+  document.getElementById('heritage-list').innerHTML = items.map((h,i) => `
+    <div class="panel">
+      <div class="panel-header">
+        <h2>${h.title_kk}</h2>
+        <button class="btn btn-sm btn-primary" onclick="saveHeritageItem(${i})">💾 Сақтау</button>
+      </div>
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group">
+          <label>🖼️ Сурет</label>
+          <select onchange="updateHeritageImg(${i},this.value)" style="margin-bottom:6px">${LOCAL_IMGS.map(img=>`<option value="${img}"${h.img===img?' selected':''}>${img}</option>`).join('')}</select>
+          <img src="${imgPath(h.img)}" style="max-width:150px;max-height:100px;border-radius:6px;object-fit:cover;display:block;margin-top:4px">
+        </div>
+        <div>
+          <div class="form-group"><label>Тақырып (ҚАЗ)</label><input type="text" id="h${i}-title-kk" value="${h.title_kk||''}"></div>
+          <div class="form-group"><label>Название (РУС)</label><input type="text" id="h${i}-title-ru" value="${h.title_ru||''}"></div>
+          <div class="form-group"><label>Title (ENG)</label><input type="text" id="h${i}-title-en" value="${h.title_en||''}"></div>
+        </div>
+      </div>
+      <div class="form-group"><label>Мәтін (ҚАЗ)</label><textarea id="h${i}-text-kk" rows="3">${h.text_kk||''}</textarea></div>
+      <div class="form-group"><label>Текст (РУС)</label><textarea id="h${i}-text-ru" rows="3">${h.text_ru||''}</textarea></div>
+      <div class="form-group"><label>Text (ENG)</label><textarea id="h${i}-text-en" rows="3">${h.text_en||''}</textarea></div>
+    </div>
+  `).join('');
+}
+
+function updateHeritageImg(i, val) {
+  const items = getHeritage();
+  items[i].img = val;
+  saveHeritageData(items);
+  renderHeritage();
+}
+function saveHeritageItem(i) {
+  const items = getHeritage();
+  ['title_kk','title_ru','title_en','text_kk','text_ru','text_en'].forEach(f => {
+    const key = f.replace('_','-');
+    const el = document.getElementById(`h${i}-${key}`);
+    if (el) items[i][f] = el.value;
+  });
+  saveHeritageData(items);
+  showAlert('Мұра ақпараты сақталды! ✅');
+}
+
+// ── SCIENCE ──
+const SCI_DEFAULT = [
+  {title_kk:'Отырар оазисінің орта ғасырлық тарихы',title_ru:'Средневековая история Отрарского оазиса',title_en:'Medieval History of the Otrar Oasis',desc_kk:'Ғылыми монография. VI–XVI ғасырлардағы тарихи даму.',desc_ru:'Научная монография. VI–XVI века.',desc_en:'Scientific monograph on 6th–16th century history.',year:'2023'},
+  {title_kk:'Ежелгі Отырар: жаңа қазба деректері',title_ru:'Древний Отрар: новые данные раскопок',title_en:'Ancient Otrar: New Excavation Data',desc_kk:'2022–2023 жж. қазба нәтижелері.',desc_ru:'Результаты раскопок 2022–2023.',desc_en:'Results of the 2022–2023 excavation season.',year:'2023'},
+  {title_kk:'Арыстанбаб кесенесі: сәулеттік талдау',title_ru:'Мавзолей Арыстанбаб: архитектурный анализ',title_en:'Arystanbab Mausoleum: Architectural Analysis',desc_kk:'XII–XIV ғасырлардағы сәулет талдауы.',desc_ru:'Анализ архитектуры XII–XIV веков.',desc_en:'Analysis of 12th–14th century architecture.',year:'2022'},
+];
+function getSci() { return JSON.parse(localStorage.getItem('otyrar_science')||JSON.stringify(SCI_DEFAULT)); }
+function saveSciData(arr) { localStorage.setItem('otyrar_science', JSON.stringify(arr)); }
+
+function renderSci() {
+  const items = getSci();
+  const container = document.getElementById('sci-list');
+  if (!items.length) { container.innerHTML='<p style="color:#999;font-size:13px">Жазба жоқ</p>'; return; }
+  container.innerHTML = items.map((s,i) => `
+    <div style="background:var(--sand);border-radius:10px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
+      <div style="background:var(--gold);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">${i+1}</div>
+      <div style="flex:1"><div style="font-weight:600;font-size:14px;color:var(--dark)">${s.title_kk}</div><div style="font-size:12px;color:var(--muted)">${s.year}</div></div>
+      <button class="btn btn-sm" style="background:var(--gold);color:#fff" onclick="openSciForm(${i})">✏️</button>
+      <button class="btn btn-sm btn-danger" onclick="delSci(${i})">🗑️</button>
+    </div>`).join('');
+}
+function openSciForm(idx) {
+  const form = document.getElementById('sci-form');
+  form.classList.remove('hidden');
+  document.getElementById('sci-idx').value = idx;
+  document.getElementById('sci-form-title').textContent = idx===-1 ? 'Ғылыми еңбек қосу' : 'Өңдеу';
+  if (idx===-1) { ['kk','ru','en'].forEach(l=>{document.getElementById(`sci-title-${l}`).value='';document.getElementById(`sci-desc-${l}`).value=''}); document.getElementById('sci-year').value=''; }
+  else { const s=getSci()[idx]; ['kk','ru','en'].forEach(l=>{document.getElementById(`sci-title-${l}`).value=s[`title_${l}`]||'';document.getElementById(`sci-desc-${l}`).value=s[`desc_${l}`]||''}); document.getElementById('sci-year').value=s.year||''; }
+  form.scrollIntoView({behavior:'smooth'});
+}
+function saveSci() {
+  const idx = parseInt(document.getElementById('sci-idx').value);
+  if (!document.getElementById('sci-title-kk').value.trim()) { showAlert('Қазақша атауы міндетті!','danger'); return; }
+  const obj = {year: document.getElementById('sci-year').value};
+  ['kk','ru','en'].forEach(l=>{obj[`title_${l}`]=document.getElementById(`sci-title-${l}`).value;obj[`desc_${l}`]=document.getElementById(`sci-desc-${l}`).value});
+  const items = getSci();
+  if (idx===-1) items.push(obj); else items[idx]=obj;
+  saveSciData(items);
+  document.getElementById('sci-form').classList.add('hidden');
+  renderSci();
+  showAlert('Сақталды! ✅');
+}
+function delSci(idx) {
+  if (!confirm('Жоясыз ба?')) return;
+  const items = getSci(); items.splice(idx,1); saveSciData(items);
+  renderSci(); showAlert('Жойылды.','warning');
+}
+
+// ── DIRECTOR ──
+const DIR_DEFAULT = {name_kk:'Ерлан Бекжанов',name_ru:'Ерлан Бекжанов',name_en:'Yerlan Bekzhanov',pos_kk:'«Отырар» мемлекеттік музей-қорығының директоры',pos_ru:'Директор Отрарского государственного музея-заповедника',pos_en:'Director of the Otrar State Museum-Reserve',bio_kk:'«Отырар» мемлекеттік археологиялық музей-қорығының директоры — тарих ғылымдарының кандидаты. Музей-қорықта 15 жылдан астам жұмыс өтілі бар.',bio_ru:'Директор Отрарского государственного археологического музея-заповедника — кандидат исторических наук. Стаж работы в музее более 15 лет.',bio_en:'Director of the Otrar State Archaeological Museum-Reserve and Candidate of Historical Sciences, with over 15 years of service.',img:'member1.jpg'};
+
+function getDir() { return JSON.parse(localStorage.getItem('otyrar_director')||JSON.stringify(DIR_DEFAULT)); }
+function loadDirector() {
+  const d = getDir();
+  ['name_kk','name_ru','name_en','pos_kk','pos_ru','pos_en','bio_kk','bio_ru','bio_en'].forEach(k => {
+    const el = document.getElementById('dir-' + k.replace('_','-'));
+    if (el) el.value = d[k]||'';
+  });
+  const sel = document.getElementById('dir-img-select');
+  if (sel && d.img) sel.value = d.img;
+  previewDirImg();
+}
+function previewDirImg() {
+  const val = document.getElementById('dir-img-select').value;
+  const p = document.getElementById('dir-img-preview');
+  if (val) { p.src = imgPath(val); p.style.display='block'; }
+}
+function saveDirector() {
+  const d = getDir();
+  ['name_kk','name_ru','name_en','pos_kk','pos_ru','pos_en','bio_kk','bio_ru','bio_en'].forEach(k => {
+    const el = document.getElementById('dir-' + k.replace('_','-'));
+    if (el) d[k] = el.value;
+  });
+  d.img = document.getElementById('dir-img-select').value;
+  localStorage.setItem('otyrar_director', JSON.stringify(d));
+  showAlert('Директор ақпараты сақталды! ✅');
+}
+
+// ── Q&A ──
+const QA_DEFAULT = [
+  {q_kk:'Музейдің басты миссиясы қандай?',a_kk:'Ұлы Жібек жолының тарихи-мәдени мұрасын сақтау, зерттеу және насихаттау.',q_ru:'Какова главная миссия музея?',a_ru:'Сохранение, исследование и популяризация наследия Великого Шёлкового пути.',q_en:'What is the museum main mission?',a_en:'Preserving, studying and promoting the heritage of the Great Silk Road.'},
+  {q_kk:'Жұмыс уақыты қандай?',a_kk:'Дүйсенбіден жексенбіге дейін сағат 9:00–18:00.',q_ru:'Каковы часы работы?',a_ru:'Понедельник–воскресенье 9:00–18:00.',q_en:'What are the opening hours?',a_en:'Monday to Sunday, 9:00 AM to 6:00 PM.'},
+];
+function getQA() { return JSON.parse(localStorage.getItem('otyrar_qa')||JSON.stringify(QA_DEFAULT)); }
+function saveQAData(arr) { localStorage.setItem('otyrar_qa', JSON.stringify(arr)); }
+
+function renderQA() {
+  const items = getQA();
+  document.getElementById('qa-list').innerHTML = items.map((q,i) => `
+    <div style="background:var(--sand);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px">
+      <div style="flex:1"><div style="font-weight:600;font-size:13px">❓ ${q.q_kk}</div><div style="font-size:12px;color:var(--muted);margin-top:3px">${q.a_kk}</div></div>
+      <button class="btn btn-sm" style="background:var(--gold);color:#fff;flex-shrink:0" onclick="openQAForm(${i})">✏️</button>
+      <button class="btn btn-sm btn-danger" style="flex-shrink:0" onclick="delQA(${i})">🗑️</button>
+    </div>`).join('');
+}
+function openQAForm(idx) {
+  document.getElementById('qa-form').classList.remove('hidden');
+  document.getElementById('qa-idx').value = idx;
+  document.getElementById('qa-form-title').textContent = idx===-1 ? 'Сұрақ-жауап қосу' : 'Өңдеу';
+  if (idx===-1) { ['kk','ru','en'].forEach(l=>{document.getElementById(`qa-q-${l}`).value='';document.getElementById(`qa-a-${l}`).value=''}); }
+  else { const q=getQA()[idx]; ['kk','ru','en'].forEach(l=>{document.getElementById(`qa-q-${l}`).value=q[`q_${l}`]||'';document.getElementById(`qa-a-${l}`).value=q[`a_${l}`]||''}); }
+}
+function saveQA() {
+  const idx = parseInt(document.getElementById('qa-idx').value);
+  const obj = {};
+  ['kk','ru','en'].forEach(l=>{obj[`q_${l}`]=document.getElementById(`qa-q-${l}`).value;obj[`a_${l}`]=document.getElementById(`qa-a-${l}`).value});
+  const items = getQA();
+  if (idx===-1) items.push(obj); else items[idx]=obj;
+  saveQAData(items); document.getElementById('qa-form').classList.add('hidden');
+  renderQA(); showAlert('Сақталды! ✅');
+}
+function delQA(idx) {
+  if (!confirm('Жоясыз ба?')) return;
+  const items=getQA(); items.splice(idx,1); saveQAData(items); renderQA(); showAlert('Жойылды.','warning');
+}
+
+// ── CONTACT ──
+const CT_DEFAULT = {phone:'+7 725 44 21 150',email:'Otrar_muzey@mail.ru',hours_kk:'Дс-Жс: 09:00–18:00',hours_ru:'Пн-Вс: 09:00–18:00',addr_kk:'Түркістан облысы, Отырар ауданы, Шәуілдір ауылы, Жібек жолы №1',addr_ru:'Туркестанская обл., Отрарский р-н, с. Шаульдер, пр. Шёлкового пути №1',addr_en:'Turkestan Region, Otrar District, Shaulder Village, Silk Road Ave. №1',ticket:'https://m.ticketon.kz/event/ortahasyrlyk-otyrar-madeniet-arystanbab',maps:''};
+function getCT() { return JSON.parse(localStorage.getItem('otyrar_contact')||JSON.stringify(CT_DEFAULT)); }
+function loadContact() {
+  const d = getCT();
+  Object.keys(d).forEach(k => { const el = document.getElementById('ct-'+k.replace('_','-')); if (el) el.value = d[k]||''; });
+}
+function saveContact() {
+  const d = {};
+  ['phone','email','hours-kk','hours-ru','addr-kk','addr-ru','addr-en','ticket','maps'].forEach(k => {
+    const el = document.getElementById('ct-'+k);
+    if (el) d[k.replace('-','_')] = el.value;
+  });
+  localStorage.setItem('otyrar_contact', JSON.stringify(d));
+  showAlert('Байланыс деректемелері сақталды! ✅');
+}
+
+// ── DOCUMENTS ──
+function getDocuments() {
+  try {
+    const docs = JSON.parse(localStorage.getItem('otyrar_documents') || '[]');
+    if (Array.isArray(docs) && docs.length) return docs;
+    if (Array.isArray(window.MUSEUM_DOCUMENTS) && window.MUSEUM_DOCUMENTS.length) return window.MUSEUM_DOCUMENTS;
+    return [];
+  } catch {
+    return Array.isArray(window.MUSEUM_DOCUMENTS) ? window.MUSEUM_DOCUMENTS : [];
+  }
+}
+function loadDocumentsEditor() {
+  const docs = getDocuments();
+  document.getElementById('docs-json').value = JSON.stringify(docs, null, 2);
+}
+function saveDocumentsEditor() {
+  const raw = document.getElementById('docs-json').value;
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    showAlert('JSON форматы қате!','danger');
+    return;
+  }
+  if (!Array.isArray(parsed)) {
+    showAlert('JSON массив болуы керек!','danger');
+    return;
+  }
+  localStorage.setItem('otyrar_documents', JSON.stringify(parsed));
+  showAlert('Құжаттар сәтті сақталды! ✅');
+}
+
+// ── PASSWORD ──
+function doChangePass() {
+  const old = document.getElementById('old-pass').value;
+  const nw = document.getElementById('new-pass').value;
+  const conf = document.getElementById('confirm-pass').value;
+  if (nw !== conf) { showAlert('Парольдер сәйкес келмейді!','danger'); return; }
+  if (nw.length < 6) { showAlert('Пароль кемінде 6 таңба!','danger'); return; }
+  const token = localStorage.getItem('otyrar_token');
+  fetch('/api/admin/password', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    },
+    body: JSON.stringify({ oldPass: old, newPass: nw })
+  })
+  .then(async (res) => {
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Қате');
+    document.getElementById('old-pass').value='';
+    document.getElementById('new-pass').value='';
+    document.getElementById('confirm-pass').value='';
+    showAlert('Пароль өзгертілді! ✅');
+  })
+  .catch((e) => showAlert(e.message || 'Сервер қатесі','danger'));
+}
+
+// ── INIT RENDER ──
+renderNewsTable();
+updateDashboard();
+</script>
+</body>
+</html>

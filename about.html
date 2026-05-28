@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>About Museum — Отырар Музей</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .page-hero{background:linear-gradient(135deg,var(--dark) 0%,var(--brown) 100%);color:#fff;padding:80px 0 60px;text-align:center}
+    .page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);color:var(--gold);margin-bottom:12px}
+    .page-hero p{color:#cbb78a;font-size:18px}
+    .page-body{max-width:1100px;margin:0 auto;padding:60px 24px}
+    .section-title{font-family:'Playfair Display',serif;font-size:32px;color:var(--dark);margin-bottom:24px;padding-bottom:12px;border-bottom:3px solid var(--gold)}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-bottom:60px}
+    .about-grid img{border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.12);width:100%;height:400px;object-fit:cover}
+    .timeline{position:relative;padding-left:32px;border-left:3px solid var(--gold);margin-bottom:40px}
+    .timeline-item{margin-bottom:28px;position:relative}
+    .timeline-item:before{content:'';position:absolute;left:-39px;top:6px;width:12px;height:12px;background:var(--gold);border-radius:50%}
+    .timeline-year{background:var(--gold);color:#fff;font-weight:700;padding:4px 12px;border-radius:20px;font-size:14px;display:inline-block;margin-bottom:8px}
+    .timeline-text{color:var(--muted);font-size:15px;line-height:1.7}
+    .dept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:40px}
+    .dept-card{background:var(--sand);border-radius:10px;padding:24px;border-left:4px solid var(--gold)}
+    .dept-card h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);margin-bottom:10px}
+    .dept-card p{font-size:14px;color:var(--muted);line-height:1.6}
+    .rules-list{list-style:none;padding:0}
+    .rules-list li{padding:14px 16px 14px 48px;position:relative;border-bottom:1px solid var(--sand);font-size:15px;color:var(--text)}
+    .rules-list li:before{content:'✓';position:absolute;left:16px;top:14px;color:var(--gold);font-weight:700;font-size:18px}
+    .doc-links{display:flex;flex-direction:column;gap:12px}
+    .doc-link{display:flex;align-items:center;gap:12px;padding:16px 20px;background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.06);color:var(--dark);text-decoration:none;transition:.2s;border-left:4px solid var(--gold)}
+    .doc-link:hover{background:var(--sand)}
+    .doc-link span{font-weight:600;font-size:15px}
+    @media(max-width:768px){.about-grid{grid-template-columns:1fr}.dept-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:480px){.dept-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div id="site-header-placeholder"></div>
+<main>
+
+<section class="page-hero">
+  <h1>About the Museum</h1>
+  <p>Otrar State Archaeological Museum-Reserve</p>
+</section>
+<div class="page-body">
+
+  <section id="history">
+    <h2 class="section-title">Museum History</h2>
+    <div class="about-grid">
+      <div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1979</div>
+            <div class="timeline-text">The Otrar State Historical and Cultural Museum-Reserve was founded by decision of the Ministry of Culture of the Kazakh SSR.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1990-2000</div>
+            <div class="timeline-text">Expansion period: the museum's territory was enlarged to 11,000 hectares and new exhibition halls were opened.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2001-2010</div>
+            <div class="timeline-text">International scientific cooperation: joint expeditions with scholars from Japan, Germany, and France.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2011-2020</div>
+            <div class="timeline-text">Modernization: all museum exhibitions were updated and modern digital equipment was installed.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2021–present</div>
+            <div class="timeline-text">Tourism development: new routes, online tours, and active international partnerships.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <img src="../images/DSC04249.JPG" alt="Museum History">
+        <p style="margin-top:20px;color:var(--muted);line-height:1.8">The Otrar State Archaeological Museum-Reserve is one of Kazakhstan's largest historical and cultural institutions, holding over 24,825 artifacts and 76 historical monuments across 11,000 hectares.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="structure">
+    <h2 class="section-title">Museum Structure</h2>
+    <div class="dept-grid">
+      <div class="dept-card"><h3>🏛️ Exhibition Department</h3><p>Historical and cultural exhibitions, interactive halls, and guided tour programs</p></div>
+      <div class="dept-card"><h3>🔬 Research Department</h3><p>Archaeological research, scientific publications, and international cooperation</p></div>
+      <div class="dept-card"><h3>📦 Collection Department</h3><p>Storage, cataloguing, and digitisation of 24,825 artefacts</p></div>
+      <div class="dept-card"><h3>🛡️ Heritage Protection</h3><p>Monitoring and restoration of 76 historical and cultural monuments</p></div>
+      <div class="dept-card"><h3>📚 Library</h3><p>Collection of books on history, archaeology, and regional studies</p></div>
+      <div class="dept-card"><h3>🎓 Education Department</h3><p>School programmes, workshops, and educational lectures</p></div>
+    </div>
+  </section>
+
+  <section id="rules">
+    <h2 class="section-title">Visitor Rules</h2>
+    <ul class="rules-list">
+      <li>Entry by ticket purchased at the box office or online.</li>
+      <li>Do not touch the exhibits.</li>
+      <li>Please maintain silence in the exhibition halls.</li>
+      <li>Food and drink only in designated areas.</li>
+      <li>Photography permitted (no flash). Video recording requires prior approval.</li>
+      <li>Children under 7 must be accompanied by an adult at all times.</li>
+      <li>Opening hours: Monday–Sunday 9:00–18:00.</li>
+    </ul>
+  </section>
+
+  <section id="charter" style="margin-top:48px">
+    <h2 class="section-title">Official Documents</h2>
+    <div class="doc-links">
+      <a href="documents.html" class="doc-link" style="border-left-color:var(--rust)">📚 <span>All documents</span></a>
+      <a href="../files/1-1.pdf" target="_blank" class="doc-link">📄 <span>Museum Charter 2023 (PDF)</span></a>
+      <a href="https://goszakup.gov.kz/ru/registry/plan?filter%5Bcustomer%5D=040440004757" target="_blank" class="doc-link">📋 <span>Public Procurement Plan</span></a>
+      <a href="https://www.gov.kz/memleket/entities/mam" target="_blank" class="doc-link">🏛️ <span>Ministry of Culture and Information</span></a>
+    </div>
+  </section>
+
+  <section id="plan" style="margin-top:48px">
+    <h2 class="section-title">Museum Map</h2>
+    <div style="background:var(--sand);border-radius:12px;padding:32px;text-align:center">
+      <div style="font-size:48px;margin-bottom:16px">🗺️</div>
+      <p style="color:var(--brown);font-weight:600">Full museum map coming soon.</p>
+      <p style="color:var(--muted);margin-top:8px">For more information, visit the contact page.</p>
+    </div>
+  </section>
+
+</div>
+
+</main>
+<div id="site-footer-placeholder"></div>
+<script src="../assets/js/template.js"></script>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

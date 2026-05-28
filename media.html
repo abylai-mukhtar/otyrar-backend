@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Media — Отырар Музей</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .page-hero{background:linear-gradient(135deg,var(--dark) 0%,var(--brown) 100%);padding:80px 0 60px;text-align:center}
+    .page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);color:var(--gold);margin-bottom:12px}
+    .page-hero p{color:#cbb78a;font-size:18px}
+    .page-body{max-width:1100px;margin:0 auto;padding:60px 24px}
+    .section-title{font-family:'Playfair Display',serif;font-size:32px;color:var(--dark);margin-bottom:24px;padding-bottom:12px;border-bottom:3px solid var(--gold)}
+    .gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px}
+    .gallery-grid img{border-radius:8px;height:180px;object-fit:cover;width:100%;transition:transform .3s;cursor:pointer}
+    .gallery-grid img:hover{transform:scale(1.04)}
+    .video-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:48px}
+    .video-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .video-card .thumb{position:relative;height:200px;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:64px;cursor:pointer}
+    .video-card .thumb img{width:100%;height:100%;object-fit:cover;position:absolute;opacity:.6}
+    .video-card .thumb .play{position:relative;z-index:2;font-size:64px}
+    .video-card .v-body{padding:16px}
+    .video-card h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);margin-bottom:6px}
+    .video-card p{font-size:14px;color:var(--muted)}
+    .pub-item{background:#fff;border-radius:10px;padding:20px 24px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:4px solid var(--gold);display:flex;gap:16px;align-items:flex-start}
+    .pub-num{background:var(--gold);color:#fff;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:14px}
+    .pub-content h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);margin-bottom:6px}
+    .pub-content p{color:var(--muted);font-size:14px;line-height:1.6}
+    .pub-content .pub-meta{color:var(--gold);font-size:13px;font-weight:600;margin-top:4px}
+    .director-wrap{display:grid;grid-template-columns:280px 1fr;gap:48px;align-items:start;margin-bottom:60px}
+    .director-img img{border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.12);width:100%}
+    .director-name{font-family:'Playfair Display',serif;font-size:26px;color:var(--dark);margin-bottom:6px}
+    .director-pos{color:var(--gold);font-size:15px;font-weight:600;margin-bottom:20px}
+    .director-bio{color:var(--muted);line-height:1.8}
+    .qa-item{background:#fff;border-radius:10px;padding:24px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .qa-q{font-weight:700;color:var(--dark);margin-bottom:10px;font-size:16px;padding-left:28px;position:relative}
+    .qa-q:before{content:'Q';position:absolute;left:0;background:var(--gold);color:#fff;width:20px;height:20px;border-radius:50%;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700;line-height:20px;text-align:center}
+    .qa-a{color:var(--muted);line-height:1.8;padding-left:28px}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:48px}
+    .contact-block{background:#fff;border-radius:12px;padding:32px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .contact-block h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:20px}
+    .c-row{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start}
+    .c-row .ico{font-size:24px;flex-shrink:0}
+    .c-row strong{display:block;color:var(--dark);font-size:14px;font-weight:600;margin-bottom:2px}
+    .c-row span,.c-row a{color:var(--muted);font-size:14px;line-height:1.6}
+    .c-row a:hover{color:var(--gold)}
+    .map-frame{border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.1);height:400px}
+    .map-frame iframe{width:100%;height:100%;border:0}
+    @media(max-width:768px){.gallery-grid{grid-template-columns:repeat(2,1fr)}.video-grid,.director-wrap,.contact-grid{grid-template-columns:1fr}}
+    @media(max-width:480px){.gallery-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div id="site-header-placeholder"></div>
+<main><section class="page-hero"><h1>Media</h1><p>Photo gallery and videos</p></section><div class="page-body"><h2 class="section-title">Photo Gallery</h2><div class="gallery-grid">
+<img src="../images/01.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/02.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/03.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/04.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/05.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/06.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/07.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/9.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/12.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2023-06-29at07.10.33.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2023-06-29at07.35.331.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2023-06-29at07.35.341.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2023-06-29at07.35.35.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2024-04-19at11.16.50.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2024-04-19at11.16.501.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2024-04-19at11.16.502.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2024-04-19at11.16.503.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2024-04-19at11.20.03.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2023-05-22at22.23.26.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2023-06-01at12.52.212.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/WhatsAppImage2023-06-01at12.52.23.jpeg" alt="Музей фотосы" loading="lazy">
+<img src="../images/453653745_891281669699446_5344562801923418561_n.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/453747501_891282133032733_1693581842374781927_n.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/461925432_936200718540874_8215959318546286465_n.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/462194232_936201165207496_8640764988649973539_n.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/436236934_844662781028002_4682618964323015977_n.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/441494164_844680781026202_6243476884084927106_n.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/DSC03641.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/DSC04249.JPG" alt="Музей фотосы" loading="lazy">
+<img src="../images/DSC_05661.JPG" alt="Музей фотосы" loading="lazy">
+<img src="../images/img_bg_4.JPG" alt="Музей фотосы" loading="lazy">
+<img src="../images/member1.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/member2.JPG" alt="Музей фотосы" loading="lazy">
+<img src="../images/2018-03-01-16-01-40-386.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/oksus_2.jpg" alt="Музей фотосы" loading="lazy">
+<img src="../images/photo1710754483.jpeg" alt="Музей фотосы" loading="lazy">
+</div><h2 class="section-title">Videos</h2><div class="video-grid"><div class="video-card"><div class="thumb"><img src="../images/51.jpg" alt=""><span class="play">▶</span></div><div class="v-body"><h3>Otrar Museum Tour</h3><p>Video tour of the museum complex</p></div></div><div class="video-card"><div class="thumb"><img src="../images/51.jpg" alt=""><span class="play">▶</span></div><div class="v-body"><h3>Arystanbab Mausoleum</h3><p>Documentary about the mausoleum</p></div></div></div></div></main>
+<div id="site-footer-placeholder"></div>
+<script src="../assets/js/template.js"></script>
+<script src="../assets/js/main.js"></script>
+</body></html>

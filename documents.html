@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Documents — Otrar Museum</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .page-hero{background:linear-gradient(135deg,var(--dark) 0%,var(--brown) 100%);color:#fff;padding:80px 0 60px;text-align:center}
+    .page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);color:var(--gold);margin-bottom:12px}
+    .page-hero p{color:#cbb78a;font-size:18px;max-width:700px;margin:0 auto}
+    .page-body{max-width:1150px;margin:0 auto;padding:50px 24px}
+    .doc-search{display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap}
+    .doc-search input{flex:1;min-width:240px;padding:14px 18px;border:2px solid var(--sand);border-radius:10px;font-size:15px;font-family:inherit}
+    .doc-search input:focus{outline:none;border-color:var(--gold)}
+    .cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px}
+    .cat-tab{padding:10px 20px;border:2px solid var(--sand);background:#fff;border-radius:30px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;transition:.2s;font-family:inherit}
+    .cat-tab:hover{border-color:var(--gold);color:var(--dark)}
+    .cat-tab.active{background:var(--gold);border-color:var(--gold);color:#fff}
+    .docs-cat-title{font-family:'Playfair Display',serif;font-size:24px;color:var(--dark);margin:36px 0 18px;padding-bottom:10px;border-bottom:3px solid var(--gold);display:flex;align-items:center;gap:10px}
+    .docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+    .doc-card{display:flex;align-items:center;gap:14px;padding:18px 20px;background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);border-left:4px solid var(--gold);cursor:pointer;transition:.2s}
+    .doc-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.12);transform:translateY(-2px)}
+    .doc-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--rust),var(--gold));color:#fff;border-radius:10px;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0}
+    .doc-info{flex:1;min-width:0}
+    .doc-info h4{font-size:15px;color:var(--dark);margin-bottom:4px;font-weight:600;line-height:1.35}
+    .doc-info .meta{font-size:12px;color:var(--muted)}
+    .doc-actions{display:flex;gap:6px;flex-shrink:0}
+    .doc-btn{width:38px;height:38px;border:1px solid var(--sand);background:#fff;border-radius:8px;display:grid;place-items:center;cursor:pointer;transition:.2s;color:var(--brown);text-decoration:none;font-size:16px}
+    .doc-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
+    .empty-msg{text-align:center;padding:60px 20px;color:var(--muted);font-size:16px}
+    /* PDF MODAL */
+    .pdf-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;z-index:9999;flex-direction:column}
+    .pdf-modal.open{display:flex}
+    .pdf-modal-bar{background:var(--dark);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .pdf-modal-bar h3{font-size:16px;color:var(--gold-lt);font-family:'Noto Sans',sans-serif;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .pdf-modal-actions{display:flex;gap:10px;flex-shrink:0}
+    .pdf-modal-actions a,.pdf-modal-actions button{padding:8px 16px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+    .pdf-dl{background:var(--gold);color:#fff}
+    .pdf-close{background:rgba(255,255,255,.15);color:#fff}
+    .pdf-modal iframe{flex:1;width:100%;border:none;background:#525659}
+    @media(max-width:600px){.pdf-modal-bar h3{font-size:13px}.pdf-modal-actions a span,.pdf-modal-actions button span{display:none}}
+  </style>
+</head>
+<body>
+
+<div id="site-header-placeholder"></div>
+
+<section class="page-hero">
+  <h1>Documents</h1>
+  <p>Legal acts, museum regulations and events plan</p>
+</section>
+
+<div class="page-body">
+  <div class="doc-search">
+    <input type="text" id="doc-search-input" placeholder="Search documents...">
+  </div>
+  <div class="cat-tabs" id="cat-tabs">
+    <button class="cat-tab active" data-cat="all">All</button>
+    <button class="cat-tab" data-cat="law">Laws</button>
+    <button class="cat-tab" data-cat="rule">Rules</button>
+    <button class="cat-tab" data-cat="plan">Plan</button>
+    <button class="cat-tab" data-cat="doc">Other</button>
+  </div>
+  <div id="docs-container"></div>
+</div>
+
+<!-- PDF VIEWER MODAL -->
+<div class="pdf-modal" id="pdf-modal">
+  <div class="pdf-modal-bar">
+    <h3 id="pdf-modal-title"></h3>
+    <div class="pdf-modal-actions">
+      <a class="pdf-dl" id="pdf-modal-download" download>⬇ <span>Download</span></a>
+      <button class="pdf-close" id="pdf-modal-close">✕ <span>Close</span></button>
+    </div>
+  </div>
+  <iframe id="pdf-modal-frame" src=""></iframe>
+</div>
+
+<div id="site-footer-placeholder"></div>
+
+<script src="../assets/js/template.js"></script>
+<script src="../assets/js/documents.js"></script>
+<script>
+const LANG = 'en';
+const CAT_NAMES = {
+  law:  {kk:'⚖️ Заңдар',ru:'⚖️ Законы',en:'⚖️ Laws'},
+  rule: {kk:'📋 Қағидалар мен нұсқаулықтар',ru:'📋 Правила и инструкции',en:'📋 Rules & Instructions'},
+  plan: {kk:'📅 Іс-шаралар жоспары',ru:'📅 План мероприятий',en:'📅 Events Plan'},
+  doc:  {kk:'📁 Басқа құжаттар',ru:'📁 Прочие документы',en:'📁 Other Documents'},
+};
+const EMPTY_MSG = {kk:'Құжат табылмады',ru:'Документы не найдены',en:'No documents found'};
+let activeCat = 'all';
+let searchTerm = '';
+
+function renderDocs() {
+  const docs = window.MUSEUM_DOCUMENTS || [];
+  const container = document.getElementById('docs-container');
+  const filtered = docs.filter(d => {
+    const matchCat = activeCat === 'all' || d.category === activeCat;
+    const name = (d['name_'+LANG] || d.name_kk || '').toLowerCase();
+    const matchSearch = !searchTerm || name.includes(searchTerm.toLowerCase());
+    return matchCat && matchSearch;
+  });
+  if (!filtered.length) {
+    container.innerHTML = '<div class="empty-msg">'+EMPTY_MSG[LANG]+'</div>';
+    return;
+  }
+  const cats = ['law','rule','plan','doc'];
+  let html = '';
+  cats.forEach(cat => {
+    const items = filtered.filter(d => d.category === cat);
+    if (!items.length) return;
+    html += '<div class="docs-cat-title">'+CAT_NAMES[cat][LANG]+'</div>';
+    html += '<div class="docs-grid">';
+    items.forEach(d => {
+      const name = d['name_'+LANG] || d.name_kk || d.file;
+      const pagesLabel = LANG==='kk'?'бет':LANG==='ru'?'стр.':'pages';
+      html += `
+        <div class="doc-card" onclick="openPdf('../files/${encodeURIComponent(d.file)}', ${JSON.stringify(name).replace(/"/g,'&quot;')})">
+          <div class="doc-icon">PDF</div>
+          <div class="doc-info">
+            <h4>${name}</h4>
+            <div class="meta">${d.pages} ${pagesLabel} · ${d.size_kb} KB</div>
+          </div>
+          <div class="doc-actions">
+            <a class="doc-btn" href="../files/${encodeURIComponent(d.file)}" target="_blank" onclick="event.stopPropagation()" title="${LANG==='kk'?'Жаңа бетте ашу':LANG==='ru'?'Открыть':'Open'}">↗</a>
+            <a class="doc-btn" href="../files/${encodeURIComponent(d.file)}" download onclick="event.stopPropagation()" title="${LANG==='kk'?'Жүктеу':LANG==='ru'?'Скачать':'Download'}">⬇</a>
+          </div>
+        </div>`;
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function openPdf(url, title) {
+  document.getElementById('pdf-modal-title').textContent = title;
+  document.getElementById('pdf-modal-frame').src = url;
+  document.getElementById('pdf-modal-download').href = url;
+  document.getElementById('pdf-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+window.openPdf = openPdf;
+
+document.getElementById('pdf-modal-close').addEventListener('click', () => {
+  document.getElementById('pdf-modal').classList.remove('open');
+  document.getElementById('pdf-modal-frame').src = '';
+  document.body.style.overflow = '';
+});
+
+document.getElementById('cat-tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.cat-tab');
+  if (!tab) return;
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  activeCat = tab.dataset.cat;
+  renderDocs();
+});
+
+document.getElementById('doc-search-input').addEventListener('input', e => {
+  searchTerm = e.target.value;
+  renderDocs();
+});
+
+window.addEventListener('cms:documents-updated', renderDocs);
+renderDocs();
+</script>
+</body>
+</html>

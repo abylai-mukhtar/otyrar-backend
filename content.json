@@ -1,0 +1,28 @@
+{
+  "admin": {
+    "user": "admin",
+    "pass": "otyrar2024"
+  },
+  "content": {
+    "otyrar_news": [
+      {
+        "date": "2026-05-28",
+        "img": "",
+        "title_kk": "АЛҒА ҚАЗАҚСТАН",
+        "body_kk": "ФЫВФЫВФЫ",
+        "title_ru": "",
+        "body_ru": "",
+        "title_en": "",
+        "body_en": ""
+      }
+    ],
+    "otyrar_gallery": [],
+    "otyrar_heritage": [],
+    "otyrar_science": [],
+    "otyrar_director": {},
+    "otyrar_qa": [],
+    "otyrar_contact": {},
+    "otyrar_documents": []
+  },
+  "updatedAt": "2026-05-28T11:50:11.924Z"
+}
